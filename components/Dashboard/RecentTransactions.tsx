@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import CreateTransaction from './CreateTransaction';
 
@@ -83,8 +84,8 @@ export default function RecentTransactions() {
                 </div>
             </Card>
 
-            <Button className="w-full cursor-pointer" size="default">
-                View All Transactions
+            <Button className="w-full cursor-pointer" size="default" asChild>
+                <Link href="/transactions">View All Transactions</Link>
             </Button>
         </div>
     );
