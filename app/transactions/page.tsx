@@ -2,6 +2,7 @@ import CreateTransaction from "@/components/dashboard/CreateTransaction";
 import EditTransaction from "@/components/dashboard/EditTransaction";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type TransactionCategory =
     | "entertainment"
@@ -25,6 +26,54 @@ interface Transaction {
 }
 
 const transactions: Transaction[] = [
+    {
+        id: "1",
+        name: "Coffee Shop",
+        category: "food",
+        amount: 5.99,
+        date: new Date("2026-01-31"),
+        icon: "☕",
+    },
+    {
+        id: "2",
+        name: "Grocery Store",
+        category: "shopping",
+        amount: 52.43,
+        date: new Date("2026-01-30"),
+        icon: "🛒",
+    },
+    {
+        id: "3",
+        name: "Gas Station",
+        category: "transportation",
+        amount: 48.5,
+        date: new Date("2026-01-29"),
+        icon: "⛽",
+    },
+    {
+        id: "4",
+        name: "Netflix Subscription",
+        category: "entertainment",
+        amount: 15.99,
+        date: new Date("2026-01-28"),
+        icon: "🎬",
+    },
+    {
+        id: "5",
+        name: "Restaurant",
+        category: "food",
+        amount: 78.25,
+        date: new Date("2026-01-27"),
+        icon: "🍽️",
+    },
+    {
+        id: "6",
+        name: "Pharmacy",
+        category: "health",
+        amount: 23.4,
+        date: new Date("2026-01-26"),
+        icon: "💊",
+    },
     {
         id: "1",
         name: "Coffee Shop",
@@ -99,36 +148,40 @@ export default function TransactionsPage() {
                         <CardTitle>Transactions</CardTitle>
                         <CardDescription>All recorded expenses</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-3">
-                        {transactions.map((transaction) => (
-                            <div
-                                key={transaction.id}
-                                className="flex flex-col gap-3 border-b py-3 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
-                            >
-                                <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-lg">
-                                        {transaction.icon}
+                    <CardContent className="p-0">
+                        <ScrollArea className="h-[600px] px-6">
+                            <div className="space-y-3 py-3">
+                                {transactions.map((transaction) => (
+                                    <div
+                                        key={transaction.id}
+                                        className="flex flex-col gap-3 border-b py-3 last:border-b-0 sm:flex-row sm:items-center sm:justify-between pr-4"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-lg">
+                                                {transaction.icon}
+                                            </div>
+                                            <div>
+                                                <p className="font-medium text-sm">{transaction.name}</p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    {transaction.category} • {transaction.date.toISOString().slice(0, 10)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center justify-between sm:justify-end gap-4">
+                                            <p className="font-semibold text-sm">
+                                                ${Math.abs(transaction.amount).toFixed(2)}
+                                            </p>
+                                            <div className="flex items-center gap-2">
+                                                <EditTransaction transaction={transaction} />
+                                                <Button size="sm" variant="destructive">
+                                                    Delete
+                                                </Button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="font-medium text-sm">{transaction.name}</p>
-                                        <p className="text-xs text-muted-foreground">
-                                            {transaction.category} • {transaction.date.toISOString().slice(0, 10)}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between sm:justify-end gap-4">
-                                    <p className="font-semibold text-sm">
-                                        ${Math.abs(transaction.amount).toFixed(2)}
-                                    </p>
-                                    <div className="flex items-center gap-2">
-                                        <EditTransaction transaction={transaction} />
-                                        <Button size="sm" variant="destructive">
-                                            Delete
-                                        </Button>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
-                        ))}
+                        </ScrollArea>
                     </CardContent>
                 </Card>
             </div>
