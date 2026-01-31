@@ -1,54 +1,76 @@
 import CreateTransaction from "@/components/dashboard/CreateTransaction";
+import EditTransaction from "@/components/dashboard/EditTransaction";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
-const transactions = [
+type TransactionCategory =
+    | "entertainment"
+    | "food"
+    | "health"
+    | "shopping"
+    | "transportation"
+    | "utilities"
+    | "subscriptions"
+    | "travel"
+    | "gifts"
+    | "education";
+
+interface Transaction {
+    id: string;
+    name: string;
+    category: TransactionCategory;
+    amount: number;
+    date: Date;
+    icon: string;
+}
+
+const transactions: Transaction[] = [
     {
-        id: 1,
+        id: "1",
         name: "Coffee Shop",
-        category: "Food & Dining",
-        amount: -5.99,
-        date: "2026-01-31",
+        category: "food",
+        amount: 5.99,
+        date: new Date("2026-01-31"),
         icon: "☕",
     },
     {
-        id: 2,
+        id: "2",
         name: "Grocery Store",
-        category: "Groceries",
-        amount: -52.43,
-        date: "2026-01-30",
+        category: "shopping",
+        amount: 52.43,
+        date: new Date("2026-01-30"),
         icon: "🛒",
     },
     {
-        id: 3,
+        id: "3",
         name: "Gas Station",
-        category: "Transportation",
-        amount: -48.5,
-        date: "2026-01-29",
+        category: "transportation",
+        amount: 48.5,
+        date: new Date("2026-01-29"),
         icon: "⛽",
     },
     {
-        id: 4,
+        id: "4",
         name: "Netflix Subscription",
-        category: "Entertainment",
-        amount: -15.99,
-        date: "2026-01-28",
+        category: "entertainment",
+        amount: 15.99,
+        date: new Date("2026-01-28"),
         icon: "🎬",
     },
     {
-        id: 5,
+        id: "5",
         name: "Restaurant",
-        category: "Food & Dining",
-        amount: -78.25,
-        date: "2026-01-27",
+        category: "food",
+        amount: 78.25,
+        date: new Date("2026-01-27"),
         icon: "🍽️",
     },
     {
-        id: 6,
+        id: "6",
         name: "Pharmacy",
-        category: "Health",
-        amount: -23.4,
-        date: "2026-01-26",
+        category: "health",
+        amount: 23.4,
+        date: new Date("2026-01-26"),
         icon: "💊",
     },
 ];
@@ -90,7 +112,7 @@ export default function TransactionsPage() {
                                     <div>
                                         <p className="font-medium text-sm">{transaction.name}</p>
                                         <p className="text-xs text-muted-foreground">
-                                            {transaction.category} • {transaction.date}
+                                            {transaction.category} • {transaction.date.toISOString().slice(0, 10)}
                                         </p>
                                     </div>
                                 </div>
@@ -99,9 +121,7 @@ export default function TransactionsPage() {
                                         ${Math.abs(transaction.amount).toFixed(2)}
                                     </p>
                                     <div className="flex items-center gap-2">
-                                        <Button size="sm" variant="outline">
-                                            Edit
-                                        </Button>
+                                        <EditTransaction transaction={transaction} />
                                         <Button size="sm" variant="destructive">
                                             Delete
                                         </Button>
