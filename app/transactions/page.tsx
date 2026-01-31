@@ -126,7 +126,7 @@ const transactions: Transaction[] = [
 
 export default function TransactionsPage() {
     return (
-        <main className="min-h-screen bg-background px-4 py-12">
+        <main className="min-h-screen bg-background px-4 mt-20">
             <div className="max-w-4xl mx-auto space-y-6">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-1">
@@ -149,7 +149,7 @@ export default function TransactionsPage() {
                         <CardDescription>All recorded expenses</CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
-                        <ScrollArea className="h-[600px] px-6">
+                        <ScrollArea className="h-150 px-6">
                             <div className="space-y-3 py-3">
                                 {transactions.map((transaction) => (
                                     <div
