@@ -1,0 +1,45 @@
+import { ExpenseSchema } from "@/lib/schemas/expense";
+import { auth } from "@clerk/nextjs/server";
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { expenses } from "@/db/schemas/schema";
+import db from "@/db";
+
+export async function POST(req: NextRequest) {
+    try {
+        const { isAuthenticated, userId } = await auth();
+        if (!isAuthenticated || !userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+
+        let body: unknown;
+        try {
+            body = await req.json();
+        } catch {
+            return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+        }
+
+        const data = ExpenseSchema.omit({ id: true }).safeParse(body);
+        if (!data.success) {
+            const error = z.prettifyError(data.error);
+            return NextResponse.json({ error: "Invalid input", details: error }, { status: 422 });
+        }
+
+        const { amount, date, category, name } = data.data;
+
+        const [created] = await db
+            .insert(expenses)
+            .values({
+                user_id: userId,
+                amount: amount.toString(),
+                date,
+                category,
+                name,
+            })
+            .returning();
+
+        return NextResponse.json({ data: created }, { status: 201 });
+    } catch (err) {
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    }
+}
