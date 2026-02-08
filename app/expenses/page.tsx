@@ -1,10 +1,10 @@
-import CreateTransaction from "@/components/dashboard/CreateTransaction";
-import EditTransaction from "@/components/dashboard/EditTransaction";
+import CreateExpense from "@/components/dashboard/CreateExpense";
+import EditExpense from "@/components/dashboard/EditExpense";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-type TransactionCategory =
+type ExpenseCategory =
     | "entertainment"
     | "food"
     | "health"
@@ -16,16 +16,16 @@ type TransactionCategory =
     | "gifts"
     | "education";
 
-interface Transaction {
+interface Expense {
     id: string;
     name: string;
-    category: TransactionCategory;
+    category: ExpenseCategory;
     amount: number;
     date: Date;
     icon: string;
 }
 
-const transactions: Transaction[] = [
+const expenses: Expense[] = [
     {
         id: "1",
         name: "Coffee Shop",
@@ -124,19 +124,19 @@ const transactions: Transaction[] = [
     },
 ];
 
-export default function TransactionsPage() {
+export default function ExpensesPage() {
     return (
         <main className="min-h-screen bg-background px-4 mt-20">
             <div className="max-w-4xl mx-auto space-y-6">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="space-y-1">
-                        <h2 className="text-2xl font-semibold tracking-tight">All Transactions</h2>
+                        <h2 className="text-2xl font-semibold tracking-tight">All Expenses</h2>
                         <p className="text-sm text-muted-foreground">
                             Review, edit, or remove expenses from your history
                         </p>
                     </div>
                     <div className="flex items-center gap-2">
-                        <CreateTransaction />
+                        <CreateExpense />
                         <Button variant="outline" size="sm">
                             Export
                         </Button>
@@ -145,34 +145,34 @@ export default function TransactionsPage() {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>Transactions</CardTitle>
+                        <CardTitle>Expenses</CardTitle>
                         <CardDescription>All recorded expenses</CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
                         <ScrollArea className="h-150 px-6">
                             <div className="space-y-3 py-3">
-                                {transactions.map((transaction) => (
+                                {expenses.map((expense) => (
                                     <div
-                                        key={transaction.id}
+                                        key={expense.id}
                                         className="flex flex-col gap-3 border-b py-3 last:border-b-0 sm:flex-row sm:items-center sm:justify-between pr-4"
                                     >
                                         <div className="flex items-center gap-4">
                                             <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-lg">
-                                                {transaction.icon}
+                                                {expense.icon}
                                             </div>
                                             <div>
-                                                <p className="font-medium text-sm">{transaction.name}</p>
+                                                <p className="font-medium text-sm">{expense.name}</p>
                                                 <p className="text-xs text-muted-foreground">
-                                                    {transaction.category} • {transaction.date.toISOString().slice(0, 10)}
+                                                    {expense.category} • {expense.date.toISOString().slice(0, 10)}
                                                 </p>
                                             </div>
                                         </div>
                                         <div className="flex items-center justify-between sm:justify-end gap-4">
                                             <p className="font-semibold text-sm">
-                                                ${Math.abs(transaction.amount).toFixed(2)}
+                                                ${Math.abs(expense.amount).toFixed(2)}
                                             </p>
                                             <div className="flex items-center gap-2">
-                                                <EditTransaction transaction={transaction} />
+                                                <EditExpense expense={expense} />
                                                 <Button size="sm" variant="destructive">
                                                     Delete
                                                 </Button>

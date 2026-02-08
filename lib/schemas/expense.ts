@@ -37,8 +37,8 @@ export const CategoryIcons: Record<Category, string> = {
     education: "📚",
 };
 
-export const TransactionSchema = z.object({
-    id: z.string().uuid("Invalid transaction ID"),
+export const ExpenseSchema = z.object({
+    id: z.string().uuid("Invalid expense ID"),
     amount: z.number()
         .positive("Amount must be greater than $0.00")
         .finite("Please enter a valid amount")
@@ -48,9 +48,9 @@ export const TransactionSchema = z.object({
         .refine((date) => date >= new Date(new Date().getFullYear() - 10, 0, 1), "Date cannot be more than 10 years in the past"),
     category: CategoryEnum.refine((val) => val, "Please select a valid category"),
     name: z.string()
-        .min(1, "Transaction name is required")
-        .max(100, "Transaction name cannot exceed 100 characters")
-        .refine((val) => val.trim().length > 0, "Transaction name cannot be empty or contain only spaces"),
+        .min(1, "Expense name is required")
+        .max(100, "Expense name cannot exceed 100 characters")
+        .refine((val) => val.trim().length > 0, "Expense name cannot be empty or contain only spaces"),
 });
 
-export type Transaction = z.infer<typeof TransactionSchema>;
+export type Expense = z.infer<typeof ExpenseSchema>;

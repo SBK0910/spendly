@@ -10,16 +10,16 @@ import { Calendar } from "../ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CategoryEnum, CategoryIcons, Transaction, TransactionSchema, type Category } from "@/lib/schemas/transaction";
+import { CategoryEnum, CategoryIcons, Expense, ExpenseSchema, type Category } from "@/lib/schemas/expense";
 import { useState } from "react";
 import { format } from "date-fns";
 
-interface EditTransactionProps {
-    transaction: Transaction;
-    onUpdate?: (data: Transaction) => void;
+interface EditExpenseProps {
+    expense: Expense;
+    onUpdate?: (data: Expense) => void;
 }
 
-export default function EditTransaction({ transaction, onUpdate }: EditTransactionProps) {
+export default function EditExpense({ expense, onUpdate }: EditExpenseProps) {
     const [open, setOpen] = useState(false);
 
     const {
@@ -27,22 +27,22 @@ export default function EditTransaction({ transaction, onUpdate }: EditTransacti
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
-    } = useForm<Transaction>({
+    } = useForm<Expense>({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        resolver: zodResolver(TransactionSchema) as any,
+        resolver: zodResolver(ExpenseSchema) as any,
         defaultValues: {
-            id: transaction.id,
-            name: transaction.name,
-            amount: transaction.amount,
-            category: transaction.category,
-            date: transaction.date,
+            id: expense.id,
+            name: expense.name,
+            amount: expense.amount,
+            category: expense.category,
+            date: expense.date,
         },
     });
 
-    const onSubmit = async (data: Transaction) => {
+    const onSubmit = async (data: Expense) => {
         try {
-            // TODO: Update transaction in database
-            console.log("Updating transaction:", data);
+            // TODO: Update expense in database
+            console.log("Updating expense:", data);
 
             if (onUpdate) {
                 onUpdate(data);
@@ -51,7 +51,7 @@ export default function EditTransaction({ transaction, onUpdate }: EditTransacti
             // Close dialog
             setOpen(false);
         } catch (error) {
-            console.error("Failed to update transaction:", error);
+            console.error("Failed to update expense:", error);
         }
     };
 
@@ -70,9 +70,9 @@ export default function EditTransaction({ transaction, onUpdate }: EditTransacti
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader className="text-left gap-1">
-                    <DialogTitle className="text-base md:text-lg">Edit Transaction</DialogTitle>
+                    <DialogTitle className="text-base md:text-lg">Edit Expense</DialogTitle>
                     <DialogDescription className="text-xs md:text-sm">
-                        Update the expense transaction details
+                        Update the expense details
                     </DialogDescription>
                 </DialogHeader>
 
@@ -82,7 +82,7 @@ export default function EditTransaction({ transaction, onUpdate }: EditTransacti
                         control={control}
                         render={({ field }) => (
                             <Field className="col-span-2">
-                                <FieldLabel htmlFor="name" className="text-xs md:text-sm">Transaction Name</FieldLabel>
+                                <FieldLabel htmlFor="name" className="text-xs md:text-sm">Expense Name</FieldLabel>
                                 <FieldContent>
                                     <Input
                                         id="name"

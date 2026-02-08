@@ -53,8 +53,8 @@ export default function Home() {
 							<span className="text-3xl">📝</span>
 						</div>
 						<div className="space-y-2">
-						<h3 className="font-semibold text-lg">Track Transactions</h3>
-						<p className="text-sm text-muted-foreground">Log and organize all your recent transactions</p>
+						<h3 className="font-semibold text-lg">Track Expenses</h3>
+						<p className="text-sm text-muted-foreground">Log and organize all your recent expenses</p>
 						</div>
 					</CardContent>
 				</Card>

@@ -1,5 +1,5 @@
 import ExpensePieChart from "@/components/dashboard/ExpensePieChart";
-import RecentTransactions from "@/components/dashboard/RecentTransactions";
+import RecentExpenses from "@/components/dashboard/RecentExpenses";
 
 export default function DashboardPage() {
     return (
@@ -7,7 +7,7 @@ export default function DashboardPage() {
             <div className="max-w-7xl mx-auto px-8 py-4">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <ExpensePieChart />
-                    <RecentTransactions />
+                    <RecentExpenses />
                 </div>
             </div>
         </div>

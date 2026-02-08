@@ -10,12 +10,12 @@ import { Calendar } from "../ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CategoryEnum, CategoryIcons, Transaction, TransactionSchema, type Category } from "@/lib/schemas/transaction";
+import { CategoryEnum, CategoryIcons, Expense, ExpenseSchema, type Category } from "@/lib/schemas/expense";
 import { useState } from "react";
 import { format } from "date-fns";
 
 
-export default function CreateTransaction() {
+export default function CreateExpense() {
     const [open, setOpen] = useState(false);
 
     const {
@@ -23,9 +23,9 @@ export default function CreateTransaction() {
         handleSubmit,
         formState: { errors, isSubmitting },
         reset,
-    } = useForm<Transaction>({
+    } = useForm<Expense>({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        resolver: zodResolver(TransactionSchema) as any,
+        resolver: zodResolver(ExpenseSchema) as any,
         defaultValues: {
             name: "",
             amount: 0,
@@ -34,15 +34,15 @@ export default function CreateTransaction() {
         },
     });
 
-    const onSubmit = async (data: Transaction) => {
+    const onSubmit = async (data: Expense) => {
         try {
-            // TODO: Save transaction to database
+            // TODO: Save expense to database
 
             // Close dialog and reset form
             setOpen(false);
             reset();
         } catch (error) {
-            console.error("Failed to create transaction:", error);
+            console.error("Failed to create expense:", error);
         }
     };
 
@@ -61,9 +61,9 @@ export default function CreateTransaction() {
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader className="text-left gap-1">
-                    <DialogTitle className="text-base md:text-lg">Add Transaction</DialogTitle>
+                    <DialogTitle className="text-base md:text-lg">Add Expense</DialogTitle>
                     <DialogDescription className="text-xs md:text-sm">
-                        Record a new expense transaction
+                        Record a new expense
                     </DialogDescription>
                 </DialogHeader>
 
@@ -73,7 +73,7 @@ export default function CreateTransaction() {
                         control={control}
                         render={({ field }) => (
                             <Field className="col-span-2">
-                                <FieldLabel htmlFor="name" className="text-xs md:text-sm">Transaction Name</FieldLabel>
+                                <FieldLabel htmlFor="name" className="text-xs md:text-sm">Expense Name</FieldLabel>
                                 <FieldContent>
                                     <Input
                                         id="name"
@@ -192,7 +192,7 @@ export default function CreateTransaction() {
                             Cancel
                         </Button>
                         <Button type="submit" disabled={isSubmitting} className="text-xs md:text-sm">
-                            {isSubmitting ? "Adding..." : "Add Transaction"}
+                            {isSubmitting ? "Adding..." : "Add Expense"}
                         </Button>
                     </DialogFooter>
                 </form>
