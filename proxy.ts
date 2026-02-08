@@ -10,15 +10,17 @@ const isSignInRoute = createRouteMatcher([
 ])
 
 export default clerkMiddleware(async (auth, req) => {
-    if (isPublicRoute(req)) {
-        return;
-    }
+    if (isPublicRoute(req)) return;
+
     const { isAuthenticated } = await auth();
-    if (!isAuthenticated) {
-        return NextResponse.redirect(new URL('/signin', req.url))
+    const onSignIn = isSignInRoute(req);
+
+    if (onSignIn && isAuthenticated) {
+        return NextResponse.redirect(new URL("/dashboard", req.url));
     }
-    if (isSignInRoute(req)) {
-        return NextResponse.redirect(new URL('/dashboard', req.url))
+
+    if (!onSignIn && !isAuthenticated) {
+        return NextResponse.redirect(new URL("/signin", req.url));
     }
 });
 

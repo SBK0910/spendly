@@ -1,6 +1,5 @@
-import { User } from "lucide-react";
-import DarkMode from "./DarkMode";
 import Link from "next/link";
+import User from "./User";
 
 export default function Header() {
     return (
@@ -15,10 +14,7 @@ export default function Header() {
                     </div>
                 </Link>
                 <div className="flex items-center gap-2">
-                    <DarkMode />
-                    <button className="w-8 h-8 rounded-full bg-linear-to-br from-primary/20 to-primary/10 border-2 border-primary/20 hover:border-primary/40 transition-colors flex items-center justify-center">
-                        <User className="w-4 h-4 text-primary" />
-                    </button>
+                    <User />
                 </div>
             </div>
         </header>
