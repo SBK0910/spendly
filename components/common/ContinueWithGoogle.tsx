@@ -1,6 +1,35 @@
+"use client";
+
+import { useSignIn } from "@clerk/nextjs"
+import { OAuthStrategy } from '@clerk/types'
+import { Skeleton } from "../ui/skeleton";
+
 export default function ContinueWithGoogle() {
+    const { signIn, isLoaded } = useSignIn();
+    if (!isLoaded) return (
+        <Skeleton className="w-full h-11" />
+    );
+
+    const signInWith = async (strategy: OAuthStrategy) => {
+        try {
+            const res = await signIn.authenticateWithRedirect({
+                strategy,
+                redirectUrl: '/signin/sso-callback',
+                redirectUrlComplete: '/dashboard',
+            });
+            console.log(res);
+        } catch (err: unknown) {
+            if (typeof err === "object" && err !== null && "errors" in err) {
+                console.log(err.errors);
+            } else {
+                console.log(err);
+            }
+            console.error(err, null, 2);
+        }
+    }
+
     return (
-        <button className="gsi-material-button">
+        <button className="gsi-material-button" onClick={() => signInWith('oauth_google')}>
             <div className="gsi-material-button-state"></div>
             <div className="gsi-material-button-content-wrapper">
                 <div className="gsi-material-button-icon">
