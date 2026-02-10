@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Invalid input", details: error }, { status: 422 });
         }
 
-        const { amount, date, category, name } = data.data;
+        const { amount, date, category, name, paymentMethod } = data.data;
 
         const [created] = await db
             .insert(expenses)
@@ -35,12 +35,14 @@ export async function POST(req: NextRequest) {
                 date,
                 category,
                 name,
+                paymentMethod,
             })
             .returning({
                 id: expenses.id,
                 amount: expenses.amount,
                 date: expenses.date,
                 category: expenses.category,
+                paymentMethod: expenses.paymentMethod,
                 name: expenses.name,
                 created_at: expenses.createdAt,
                 updated_at: expenses.updatedAt,
@@ -55,6 +57,7 @@ export async function POST(req: NextRequest) {
                 name: created.name,
                 createdAt: created.created_at,
                 updatedAt: created.updated_at,
+                paymentMethod: created.paymentMethod,
             }
         }, { status: 201 });
     } catch {

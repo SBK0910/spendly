@@ -1,0 +1,2 @@
+CREATE TYPE "public"."payment_method" AS ENUM('cash', 'credit_card', 'debit_card', 'bank_transfer', 'digital_wallet', 'other');--> statement-breakpoint
+ALTER TABLE "expenses" ADD COLUMN "payment_method" "payment_method" NOT NULL;

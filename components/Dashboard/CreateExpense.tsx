@@ -10,7 +10,7 @@ import { Calendar } from "../ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CategoryEnum, CategoryIcons, Expense, ExpenseSchema, type Category } from "@/lib/schemas/expense";
+import { CategoryEnum, CategoryIcons, Expense, ExpenseSchema, type Category, PaymentMethodEnum, PaymentMethodIcons, type PaymentMethod } from "@/lib/schemas/expense";
 import { useState } from "react";
 import { format } from "date-fns";
 import { useCreateExpenseMutation } from "@/mutations/createExpense";
@@ -32,6 +32,7 @@ export default function CreateExpense() {
             amount: 0,
             category: "food" as Category,
             date: new Date(),
+            paymentMethod: "cash" as PaymentMethod,
         },
     });
 
@@ -93,7 +94,7 @@ export default function CreateExpense() {
                         name="amount"
                         control={control}
                         render={({ field }) => (
-                            <Field className="col-span-2">
+                            <Field className="col-span-1">
                                 <FieldLabel htmlFor="amount" className="text-xs md:text-sm">Amount ($)</FieldLabel>
                                 <FieldContent>
                                     <Input
@@ -116,6 +117,34 @@ export default function CreateExpense() {
                                         }}
                                     />
                                     <FieldError className="text-xs md:text-sm">{errors.amount?.message}</FieldError>
+                                </FieldContent>
+                            </Field>
+                        )}
+                    />
+
+                    <Controller
+                        name="paymentMethod"
+                        control={control}
+                        render={({ field }) => (
+                            <Field>
+                                <FieldLabel htmlFor="paymentMethod" className="text-xs md:text-sm">Payment Method</FieldLabel>
+                                <FieldContent>
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <SelectTrigger id="paymentMethod" className="w-full text-xs md:text-sm">
+                                            <SelectValue placeholder="Select payment method" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {PaymentMethodEnum.options.map((method) => (
+                                                <SelectItem key={method} value={method} className="text-xs md:text-sm">
+                                                    <span className="flex items-center gap-2">
+                                                        <span>{PaymentMethodIcons[method as PaymentMethod]}</span>
+                                                        <span className="capitalize">{method.replace(/_/g, " ")}</span>
+                                                    </span>
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FieldError className="text-xs md:text-sm">{errors.paymentMethod?.message}</FieldError>
                                 </FieldContent>
                             </Field>
                         )}

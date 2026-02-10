@@ -13,6 +13,15 @@ export const categoryEnum = pgEnum('category', [
     'education',
 ]);
 
+export const paymentMethodEnum = pgEnum('payment_method', [
+    'cash',
+    'credit_card',
+    'debit_card',
+    'bank_transfer',
+    'digital_wallet',
+    'other',
+]);
+
 export const expenses = pgTable('expenses', {
     user_id: text('user_id').notNull(),
     id: uuid('id').primaryKey().defaultRandom(),
@@ -20,6 +29,7 @@ export const expenses = pgTable('expenses', {
     date: timestamp('date', { mode: 'date' }).notNull(),
     category: categoryEnum('category').notNull(),
     name: varchar('name', { length: 100 }).notNull(),
+    paymentMethod: paymentMethodEnum('payment_method').notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
 }, (table) => [

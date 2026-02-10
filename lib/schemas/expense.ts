@@ -24,6 +24,26 @@ export const CategoryEnum = z.enum([
 
 export type Category = z.infer<typeof CategoryEnum>;
 
+export const PaymentMethodEnum = z.enum([
+    "cash",
+    "credit_card",
+    "debit_card",
+    "bank_transfer",
+    "digital_wallet",
+    "other",
+]);
+
+export type PaymentMethod = z.infer<typeof PaymentMethodEnum>;
+
+export const PaymentMethodIcons: Record<PaymentMethod, string> = {
+    cash: "💵",
+    credit_card: "💳",
+    debit_card: "🏦",
+    bank_transfer: "🏧",
+    digital_wallet: "📱",
+    other: "❓",
+};
+
 export const CategoryIcons: Record<Category, string> = {
     food: "🍽️",
     transportation: "🚗",
@@ -51,6 +71,7 @@ export const ExpenseSchema = z.object({
         .min(1, "Expense name is required")
         .max(100, "Expense name cannot exceed 100 characters")
         .refine((val) => val.trim().length > 0, "Expense name cannot be empty or contain only spaces"),
+    paymentMethod: PaymentMethodEnum.refine((val) => val, "Please select a payment method"),
 });
 
 export type Expense = z.infer<typeof ExpenseSchema>;
