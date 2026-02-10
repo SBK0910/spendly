@@ -13,19 +13,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CategoryEnum, CategoryIcons, Expense, ExpenseSchema, type Category } from "@/lib/schemas/expense";
 import { useState } from "react";
 import { format } from "date-fns";
-
+import { useCreateExpenseMutation } from "@/mutations/createExpense";
 
 export default function CreateExpense() {
     const [open, setOpen] = useState(false);
+    const { mutate: createExpense, isPending } = useCreateExpenseMutation();
 
     const {
         control,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
         reset,
-    } = useForm<Expense>({
+    } = useForm<Omit<Expense, "id">>({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        resolver: zodResolver(ExpenseSchema) as any,
+        resolver: zodResolver(ExpenseSchema.omit({ id: true })) as any,
         defaultValues: {
             name: "",
             amount: 0,
@@ -34,16 +35,16 @@ export default function CreateExpense() {
         },
     });
 
-    const onSubmit = async (data: Expense) => {
-        try {
-            // TODO: Save expense to database
-
-            // Close dialog and reset form
-            setOpen(false);
-            reset();
-        } catch (error) {
-            console.error("Failed to create expense:", error);
-        }
+    const onSubmit = (data: Omit<Expense, "id">) => {
+        createExpense(data, {
+            onSuccess: () => {
+                setOpen(false);
+                reset();
+            },
+            onError: (error) => {
+                console.error("Failed to create expense:", error.message);
+            },
+        });
     };
 
     return (
@@ -96,12 +97,12 @@ export default function CreateExpense() {
                                 <FieldLabel htmlFor="amount" className="text-xs md:text-sm">Amount ($)</FieldLabel>
                                 <FieldContent>
                                     <Input
-                                        {...field}
                                         id="amount"
                                         type="number"
                                         step=".01"
                                         placeholder="0.00"
                                         className="text-xs md:text-sm"
+                                        value={field.value || ""}
                                         onChange={(e) => {
                                             const value = e.target.value;
                                             if (value.includes('.')) {
@@ -110,7 +111,8 @@ export default function CreateExpense() {
                                                     return;
                                                 }
                                             }
-                                            field.onChange(e.target.valueAsNumber);
+                                            const numValue = e.target.valueAsNumber;
+                                            field.onChange(isNaN(numValue) ? 0 : numValue);
                                         }}
                                     />
                                     <FieldError className="text-xs md:text-sm">{errors.amount?.message}</FieldError>
@@ -191,8 +193,8 @@ export default function CreateExpense() {
                         }} className="text-xs md:text-sm">
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={isSubmitting} className="text-xs md:text-sm">
-                            {isSubmitting ? "Adding..." : "Add Expense"}
+                        <Button type="submit" disabled={isPending} className="text-xs md:text-sm">
+                            {isPending ? "Adding..." : "Add Expense"}
                         </Button>
                     </DialogFooter>
                 </form>

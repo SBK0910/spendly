@@ -36,10 +36,28 @@ export async function POST(req: NextRequest) {
                 category,
                 name,
             })
-            .returning();
+            .returning({
+                id: expenses.id,
+                amount: expenses.amount,
+                date: expenses.date,
+                category: expenses.category,
+                name: expenses.name,
+                created_at: expenses.createdAt,
+                updated_at: expenses.updatedAt,
+            });
 
-        return NextResponse.json({ data: created }, { status: 201 });
-    } catch (err) {
+        return NextResponse.json({
+            data: {
+                id: created.id,
+                amount: parseFloat(created.amount),
+                date: created.date,
+                category: created.category,
+                name: created.name,
+                createdAt: created.created_at,
+                updatedAt: created.updated_at,
+            }
+        }, { status: 201 });
+    } catch {
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

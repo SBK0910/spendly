@@ -43,7 +43,7 @@ export const ExpenseSchema = z.object({
         .positive("Amount must be greater than $0.00")
         .finite("Please enter a valid amount")
         .refine((val) => val <= 999999.99, "Amount cannot exceed $999,999.99"),
-    date: z.date()
+    date: z.coerce.date()
         .refine((date) => date <= new Date(), "Date cannot be in the future")
         .refine((date) => date >= new Date(new Date().getFullYear() - 10, 0, 1), "Date cannot be more than 10 years in the past"),
     category: CategoryEnum.refine((val) => val, "Please select a valid category"),
