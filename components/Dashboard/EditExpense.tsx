@@ -63,7 +63,7 @@ export default function EditExpense({ expense, onUpdate }: EditExpenseProps) {
             }
         }}>
             <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="text-xs md:text-sm">
+                <Button variant="outline" size="sm" className="text-xs md:text-sm cursor-pointer">
                     <Pencil className="size-3.5 mr-1" />
                     Edit
                 </Button>

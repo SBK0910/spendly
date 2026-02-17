@@ -1,130 +1,16 @@
+"use client";
+
 import CreateExpense from "@/components/dashboard/CreateExpense";
 import EditExpense from "@/components/dashboard/EditExpense";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-type ExpenseCategory =
-    | "entertainment"
-    | "food"
-    | "health"
-    | "shopping"
-    | "transportation"
-    | "utilities"
-    | "subscriptions"
-    | "travel"
-    | "gifts"
-    | "education";
-
-interface Expense {
-    id: string;
-    name: string;
-    category: ExpenseCategory;
-    amount: number;
-    date: Date;
-    icon: string;
-}
-
-const expenses: Expense[] = [
-    {
-        id: "1",
-        name: "Coffee Shop",
-        category: "food",
-        amount: 5.99,
-        date: new Date("2026-01-31"),
-        icon: "☕",
-    },
-    {
-        id: "2",
-        name: "Grocery Store",
-        category: "shopping",
-        amount: 52.43,
-        date: new Date("2026-01-30"),
-        icon: "🛒",
-    },
-    {
-        id: "3",
-        name: "Gas Station",
-        category: "transportation",
-        amount: 48.5,
-        date: new Date("2026-01-29"),
-        icon: "⛽",
-    },
-    {
-        id: "4",
-        name: "Netflix Subscription",
-        category: "entertainment",
-        amount: 15.99,
-        date: new Date("2026-01-28"),
-        icon: "🎬",
-    },
-    {
-        id: "5",
-        name: "Restaurant",
-        category: "food",
-        amount: 78.25,
-        date: new Date("2026-01-27"),
-        icon: "🍽️",
-    },
-    {
-        id: "6",
-        name: "Pharmacy",
-        category: "health",
-        amount: 23.4,
-        date: new Date("2026-01-26"),
-        icon: "💊",
-    },
-    {
-        id: "1",
-        name: "Coffee Shop",
-        category: "food",
-        amount: 5.99,
-        date: new Date("2026-01-31"),
-        icon: "☕",
-    },
-    {
-        id: "2",
-        name: "Grocery Store",
-        category: "shopping",
-        amount: 52.43,
-        date: new Date("2026-01-30"),
-        icon: "🛒",
-    },
-    {
-        id: "3",
-        name: "Gas Station",
-        category: "transportation",
-        amount: 48.5,
-        date: new Date("2026-01-29"),
-        icon: "⛽",
-    },
-    {
-        id: "4",
-        name: "Netflix Subscription",
-        category: "entertainment",
-        amount: 15.99,
-        date: new Date("2026-01-28"),
-        icon: "🎬",
-    },
-    {
-        id: "5",
-        name: "Restaurant",
-        category: "food",
-        amount: 78.25,
-        date: new Date("2026-01-27"),
-        icon: "🍽️",
-    },
-    {
-        id: "6",
-        name: "Pharmacy",
-        category: "health",
-        amount: 23.4,
-        date: new Date("2026-01-26"),
-        icon: "💊",
-    },
-];
+import { CategoryIcons } from "@/lib/schemas/expense";
+import { getExpensesQueryOptions } from "@/queries/expense";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ExpensesPage() {
+    const { data, status, error } = useQuery(getExpensesQueryOptions(1, 20));
     return (
         <main className="min-h-screen bg-background px-4 mt-20">
             <div className="max-w-4xl mx-auto space-y-6">
@@ -151,14 +37,32 @@ export default function ExpensesPage() {
                     <CardContent className="p-0">
                         <ScrollArea className="h-150 px-6">
                             <div className="space-y-3 py-3">
-                                {expenses.map((expense) => (
+                                {status === 'pending' && (
+                                    <div className="py-12 text-center text-sm text-muted-foreground">
+                                        Loading expenses...
+                                    </div>
+                                )}
+
+                                {status === 'error' && (
+                                    <div className="py-12 text-center text-sm text-red-500">
+                                        Error loading expenses: {error?.message || 'Unknown error'}
+                                    </div>
+                                )}
+
+                                {status === 'success' && data.length === 0 && (
+                                    <div className="py-12 text-center text-sm text-muted-foreground">
+                                        No expenses found. Create your first expense to get started!
+                                    </div>
+                                )}
+
+                                {status === 'success' && data.map((expense) => (
                                     <div
                                         key={expense.id}
                                         className="flex flex-col gap-3 border-b py-3 last:border-b-0 sm:flex-row sm:items-center sm:justify-between pr-4"
                                     >
                                         <div className="flex items-center gap-4">
                                             <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-lg">
-                                                {expense.icon}
+                                                {CategoryIcons[expense.category]}
                                             </div>
                                             <div>
                                                 <p className="font-medium text-sm">{expense.name}</p>
