@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { expenses } from "@/db/schemas/schema";
 import db from "@/db";
+import { desc, eq } from "drizzle-orm";
 
 export async function POST(req: NextRequest) {
     try {
@@ -60,6 +61,55 @@ export async function POST(req: NextRequest) {
                 paymentMethod: created.paymentMethod,
             }
         }, { status: 201 });
+    } catch {
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    }
+}
+
+export async function GET(req: NextRequest) {
+    try {
+        const { isAuthenticated, userId } = await auth();
+        if (!isAuthenticated || !userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+        const page = parseInt(req.nextUrl.searchParams.get("page") || "1", 10);
+        const limit = parseInt(req.nextUrl.searchParams.get("size") || "10", 10);
+        if (isNaN(page) || page < 1 || isNaN(limit) || limit < 1) {
+            return NextResponse.json({ error: "Invalid pagination parameters" }, { status: 400 });
+        }
+
+        const offset = (page - 1) * limit;
+
+        const expensesList = await db
+            .select({
+                id: expenses.id,
+                amount: expenses.amount,
+                date: expenses.date,
+                category: expenses.category,
+                name: expenses.name,
+                createdAt: expenses.createdAt,
+                updatedAt: expenses.updatedAt,
+                paymentMethod: expenses.paymentMethod,
+            })
+            .from(expenses)
+            .where(eq(expenses.user_id, userId))
+            .orderBy(desc(expenses.createdAt))
+            .limit(limit)
+            .offset(offset);
+
+        const formattedExpenses = expensesList.map(expense => ({
+            id: expense.id,
+            amount: parseFloat(expense.amount),
+            date: expense.date,
+            category: expense.category,
+            name: expense.name,
+            createdAt: expense.createdAt,
+            updatedAt: expense.updatedAt,
+            paymentMethod: expense.paymentMethod,
+        }));
+
+        return NextResponse.json({ data: formattedExpenses }, { status: 200 });
+
     } catch {
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
