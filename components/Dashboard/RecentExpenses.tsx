@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import CreateExpense from './CreateExpense';
+import CreateExpense from '../expenses/CreateExpense';
 import { useQuery } from '@tanstack/react-query';
 import { getRecentExpenseQueryOptions } from '@/queries/expense';
 import { CategoryIcons } from '@/lib/schemas/expense';
