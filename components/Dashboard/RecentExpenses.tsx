@@ -4,51 +4,12 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import CreateExpense from './CreateExpense';
+import { useQuery } from '@tanstack/react-query';
+import { getRecentExpenseQueryOptions } from '@/queries/expense';
+import { CategoryIcons } from '@/lib/schemas/expense';
 
 export default function RecentExpenses() {
-    const expenses = [
-        {
-            id: 1,
-            name: 'Coffee Shop',
-            category: 'Food & Dining',
-            amount: -5.99,
-            date: '2026-01-31',
-            icon: '☕',
-        },
-        {
-            id: 2,
-            name: 'Grocery Store',
-            category: 'Groceries',
-            amount: -52.43,
-            date: '2026-01-30',
-            icon: '🛒',
-        },
-        {
-            id: 3,
-            name: 'Gas Station',
-            category: 'Transportation',
-            amount: -48.50,
-            date: '2026-01-29',
-            icon: '⛽',
-        },
-        {
-            id: 4,
-            name: 'Netflix Subscription',
-            category: 'Entertainment',
-            amount: -15.99,
-            date: '2026-01-28',
-            icon: '🎬',
-        },
-        {
-            id: 5,
-            name: 'Restaurant',
-            category: 'Food & Dining',
-            amount: -78.25,
-            date: '2026-01-27',
-            icon: '🍽️',
-        },
-    ];
-
+    const { data, status, error } = useQuery(getRecentExpenseQueryOptions());
     return (
         <div className="space-y-4">
             <Card>
@@ -61,14 +22,32 @@ export default function RecentExpenses() {
                 </CardHeader>
 
                 <div className="px-6 space-y-3">
-                    {expenses.map((expense) => (
+                    {status === 'pending' && (
+                        <div className="py-8 text-center text-sm text-muted-foreground">
+                            Loading expenses...
+                        </div>
+                    )}
+
+                    {status === 'error' && (
+                        <div className="py-8 text-center text-sm text-red-500">
+                            Error loading expenses: {error?.message || 'Unknown error'}
+                        </div>
+                    )}
+
+                    {status === 'success' && data.length === 0 && (
+                        <div className="py-8 text-center text-sm text-muted-foreground">
+                            No expenses yet. Create one to get started!
+                        </div>
+                    )}
+
+                    {status === 'success' && data.map((expense) => (
                         <div
                             key={expense.id}
                             className="flex items-center justify-between py-3 border-b last:border-b-0"
                         >
                             <div className="flex items-center gap-4 flex-1">
                                 <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-lg">
-                                    {expense.icon}
+                                    {CategoryIcons[expense.category]}
                                 </div>
                                 <div className="flex-1">
                                     <p className="font-medium text-sm">{expense.name}</p>
@@ -77,7 +56,7 @@ export default function RecentExpenses() {
                             </div>
                             <div className="text-right">
                                 <p className="font-semibold text-sm">${Math.abs(expense.amount).toFixed(2)}</p>
-                                <p className="text-xs text-muted-foreground">{expense.date}</p>
+                                <p className="text-xs text-muted-foreground">{new Date(expense.date).toLocaleDateString()}</p>
                             </div>
                         </div>
                     ))}

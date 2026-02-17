@@ -1,8 +1,10 @@
 import { Expense, ExpenseSchema } from "@/lib/schemas/expense";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 
 export function useCreateExpenseMutation() {
+    const queryClient = useQueryClient();
+
     return useMutation({
         mutationFn: async (data: Omit<Expense, "id">) => {
             console.log("Creating expense with data:", data);
@@ -28,6 +30,11 @@ export function useCreateExpenseMutation() {
 
             return responseData.data.data;
 
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["recentExpenses"],
+            });
         },
         onError: (error) => {
             console.error("Error creating expense:", error);
