@@ -1,6 +1,7 @@
 "use client";
 
 import CreateExpense from "@/components/expenses/CreateExpense";
+import DeleteExpense from "@/components/expenses/DeleteTransaction";
 import EditExpense from "@/components/expenses/EditExpense";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -77,9 +78,7 @@ export default function ExpensesPage() {
                                             </p>
                                             <div className="flex items-center gap-2">
                                                 <EditExpense expense={expense} />
-                                                <Button size="sm" variant="destructive">
-                                                    Delete
-                                                </Button>
+                                                <DeleteExpense expenseId={expense.id} />
                                             </div>
                                         </div>
                                     </div>
