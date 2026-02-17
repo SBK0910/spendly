@@ -35,6 +35,9 @@ export function useCreateExpenseMutation() {
             queryClient.invalidateQueries({
                 queryKey: ["recentExpenses"],
             });
+            queryClient.invalidateQueries({
+                queryKey: ["expenses"],
+            })
         },
         onError: (error) => {
             console.error("Error creating expense:", error);
