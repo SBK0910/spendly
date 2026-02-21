@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1770544816012,
-      "tag": "0000_remarkable_natasha_romanoff",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1770545133448,
-      "tag": "0001_exotic_queen_noir",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1770744256270,
-      "tag": "0002_slim_marrow",
+      "when": 1771647842500,
+      "tag": "0000_boring_luke_cage",
       "breakpoints": true
     }
   ]
